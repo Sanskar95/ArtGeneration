@@ -14,17 +14,13 @@ from werkzeug.utils import redirect, secure_filename
 
 app = Flask(__name__,template_folder='template')
 app.secret_key = "super secret key"
-UPLOAD_FOLDER="/Users/z002r1y/PycharmProjects/ArtGeneration/output"
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 
-
-
-
-UPLOAD_FOLDER='/Users/z002r1y/PycharmProjects/ArtGeneration/images'
+UPLOAD_FOLDER='/Users/z002r1y/PycharmProjects/ArtGeneration/output'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+UPLOAD_DIRECTORY='/Users/z002r1y/PycharmProjects/ArtGeneration/contentImage'
 
 
 def allowed_file(filename):
@@ -75,6 +71,7 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
+
 j=0
 @app.route("/json", methods=["POST"])
 def json_example():
@@ -82,7 +79,7 @@ def json_example():
 
     id = req_data['id'];
 
-    file = open("/Users/z002r1y/PycharmProjects/ArtGeneration/id/id.txt", "w")
+    file = open("/Users/z002r1y/PycharmProjects/ArtGeneration/styleId/id.txt", "w")
     file.write(str(id))
 
 
@@ -98,18 +95,32 @@ def yeye():
     return "d"
 
 
+@app.route('/uploads/<path:filename>')
+def download_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename, as_attachment=True)
 
 
+@app.route('/files/<filename>', methods=['POST'])
+def post_file(filename):
+    """Upload a file."""
+
+    if '/' in filename:
+        # Return 400 BAD REQUEST
+        os.abort(400, 'no subdirectories directories allowed')
+
+    # with open(os.path.join(UPLOAD_DIRECTORY, filename), 'wb') as fp:
+    #     fp.write(request.data)
+    req_data = request.get_json()
+
+    id = req_data['id'];
+
+    file = open("/Users/z002r1y/PycharmProjects/ArtGeneration/contentId/id.txt", "w")
+    file.write(str(id))
 
 
-#
-# @app.route('/upload', methods=['POST'])
-# def upload_file():
-#     file = request.files['file']
-#     f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-#     file.save(f)
-#
-#     return "file uploaded successfully"
+    # Return 201 CREATED
+    return '', 201
 
 
 if __name__ == "__main__":

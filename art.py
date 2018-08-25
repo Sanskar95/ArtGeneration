@@ -1,5 +1,7 @@
 import shutil
 
+from PIL import  Image
+
 from nst_utils import *
 import numpy as np
 import tensorflow as tf
@@ -133,18 +135,25 @@ with tf.Session() as test:
 
 
 
-f=open("/Users/z002r1y/PycharmProjects/ArtGeneration/id/id.txt","r")
+f=open("/Users/z002r1y/PycharmProjects/ArtGeneration/styleId/id.txt","r")
 lines=f.readlines()
 eof=f.tell()
 result=lines[eof-1]
 f.close()
 
 
+g=open("/Users/z002r1y/PycharmProjects/ArtGeneration/contentId/id.txt","r")
+lines=g.readlines()
+eof=g.tell()
+result1=lines[eof-1]
+g.close()
+
+
 tf.reset_default_graph()
 
 sess = tf.InteractiveSession()
 
-content_image = scipy.misc.imread("contentImage/louvre_small.jpg")
+content_image = scipy.misc.imread("contentImage/"+str(result1)+".jpg")
 content_image = reshape_and_normalize_image(content_image)
 
 style_image = scipy.misc.imread("images/"+str(result)+".jpg")
@@ -182,7 +191,7 @@ train_step = optimizer.minimize(J)
 sess.run(tf.global_variables_initializer())
 sess.run(model['input'].assign(generated_image))
 
-for i in range(40):
+for i in range(200):
 
     sess.run(train_step)
 
@@ -196,7 +205,6 @@ for i in range(40):
         save_image("output/" + str(i) + ".png", generated_image)
 
 save_image('output/generated_image.jpg', generated_image)
-shutil.copy('/Users/z002r1y/PycharmProjects/ArtGeneration/output/generated_image.jpg','/Users/z002r1y/react/ArtGeneration/styleImages')
 
 # return generated_image
 
