@@ -3,6 +3,8 @@ import json
 import time
 
 import os
+
+from PIL import Image
 from flask import Flask, request, flash, url_for, send_from_directory, render_template
 from nst_utils import *
 
@@ -85,6 +87,29 @@ def json_example():
 
     print(id)
     return "d"
+
+
+@app.route("/up", methods=['POST'])
+def upload_filex():
+    
+    file = request.files['image']
+
+    basewidth = 400
+    img = Image.open(file)
+   
+    hsize = 300
+    img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+    img.save('/Users/z002r1y/PycharmProjects/ArtGeneration/contentImage/photo.jpg')
+    # f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+
+    # add your custom code to check that the uploaded file is a valid image and not a malicious file (out-of-scope for this post)
+    # file.save(f)
+
+    return render_template('index.html')
+
+
+
+
 
 
 @app.route("/process", methods=["GET"])

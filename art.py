@@ -153,7 +153,7 @@ tf.reset_default_graph()
 
 sess = tf.InteractiveSession()
 
-content_image = scipy.misc.imread("contentImage/"+str(result1)+".jpg")
+content_image = scipy.misc.imread("contentImage/photo.jpg")
 content_image = reshape_and_normalize_image(content_image)
 
 style_image = scipy.misc.imread("images/"+str(result)+".jpg")
